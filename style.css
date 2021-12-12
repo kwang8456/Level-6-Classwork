@@ -1,0 +1,21 @@
+h1 {
+    background-color: rgb(208, 248, 255);
+}
+
+body {
+    text-align: center;
+}
+
+.thumb {
+    width: 12%;
+}
+
+#mainimg {
+    width: 50%;
+}
+
+#caption {
+    font-size: 24pt;
+    font-weight: bold;
+}
+
