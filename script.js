@@ -1,6 +1,7 @@
 const JACK = 11, QUEEN = 12, KING = 13, ACE = 1;
 const CLUB = 0, DIAMOND = 1, HEART = 2, SPADE = 3; 
 const BLUE_BACK = "back-blue-75-3.png";
+const TOP_DECK = 0;
 
 function initialize ()
 {
@@ -36,7 +37,7 @@ function initialize ()
     offset = 0;
 
     flippedCardsContainer = document.getElementById ("flipped");
-    deck = generateStandardDeck ();
+    // deck = generateStandardDeck ();
 
     // mightyJoe = new Animal ("Joe");
     // kodo = new Animal ("Kodo");
@@ -49,6 +50,11 @@ function initialize ()
     listOutput = document.getElementById ("animallist");
 
     animalList = [new Animal ("Joe", "New York"), new Animal ("Kodo", "Arizona")];
+
+    cardsOutput = document.getElementById ("cardsout");
+    theDeck = generateStandardDeck ();
+    theDeck.shuffleDeck ();
+    showDeck ();
 
     display ();
 }
@@ -82,22 +88,22 @@ function selectItem (idx)
     display (); 
 }
 
-function generateStandardDeck ()
-{
-    var deck = [];
-    for (var r = ACE; r <= KING; r++)
-    {
-        for (var s = CLUB; s <= SPADE; s++)
-        {
-            var card = {};
-            card.rank = r;
-            card.suit = s;
-            card.imgFile = r + "-" + s + ".png";
-            deck.push (card);
-        }
-    }
-    return deck;
-}
+// function generateStandardDeck ()
+// {
+//     var deck = [];
+//     for (var r = ACE; r <= KING; r++)
+//     {
+//         for (var s = CLUB; s <= SPADE; s++)
+//         {
+//             var card = {};
+//             card.rank = r;
+//             card.suit = s;
+//             card.imgFile = r + "-" + s + ".png";
+//             deck.push (card);
+//         }
+//     }
+//     return deck;
+// }
 
 function flipCard ()
 {
@@ -188,6 +194,66 @@ function valuesEntered ()
 function animalInList (animalIdx)
 {
     return (animalIdx >= 0 && animalIdx < animalList.length);
+}
+
+function Card (r, s, i)
+{
+    this.rank = r;
+    this.suit = s;
+    this.imageFilename = i;
+}
+
+function CardDeck ()
+{
+    //this.deck = [];
+}
+
+CardDeck.prototype = Array.prototype;
+
+CardDeck.prototype.shuffleDeck = function ()
+{
+    var tmpDeck = new CardDeck ();
+    while (this.length > 0)
+    {
+        var tmpCard = this.splice (getRandomInteger (0, this.length - 1), 1) [0];
+        tmpDeck.push (tmpCard);
+    }
+
+    this.push.apply (this, tmpDeck);
+}
+
+function generateStandardDeck ()
+{
+    var deck = new CardDeck ();
+
+    for (var r = ACE; r <= KING; r++)
+    {
+        for (var s = CLUB; s <= SPADE; s++)
+        {
+            deck.push (new Card (r, s, r + "-" + s + ".png"));
+        }
+    }
+
+    return deck;
+}
+
+function showDeck ()
+{
+    while (theDeck.length > 0)
+    {
+        var tmpImg = document.createElement ("img");
+        var tmpCard = theDeck.shift ();
+        tmpImg.src = "cardimages/" + tmpCard.imageFilename;
+        cardsOutput.appendChild (tmpImg);
+    }
+}
+
+function getRandomInteger (min, max)
+{
+    var multiplier = max - (min - 1);
+    var ran = parseInt (Math.random() * multiplier) + min;
+
+    return ran;
 }
 
 function display ()
